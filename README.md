@@ -12,5 +12,16 @@ export GITHUB_REPO=your_repo_name
 export GITHUB_ACCESS_TOKEN=your_access_token
 export CATEGORY_ID=certain_category_id # optional
 ```
+Get your own [GITHUB_ACCESS_TOKEN](https://github.com/settings/tokens) here
 
-Get your own [GITHUB_ACCESS_TOKEN](https://github.com/settings/tokens)
+Then just run the application
+
+```shell
+go build main.go
+./main
+```
+
+# Screens
+
+<image src="./screens/homepage.png" width="200"/>
+<image src="./screens/postpage.png" width="200"/>
