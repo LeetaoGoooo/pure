@@ -1,6 +1,7 @@
 <!doctype html>
 <html class="h-full antialiased js-focus-visible"
-    style="--header-position:sticky; --content-offset:116px; --header-height:180px; --header-mb:-116px; --header-top:0px; --avatar-top:0px; --avatar-image-transform:translate3d(0rem, 0, 0) scale(1); --avatar-border-transform:translate3d(-0.222222rem, 0, 0) scale(1.77778); --avatar-border-opacity:0;">
+    style="--header-position:sticky; --content-offset:116px; --header-height:180px; --header-mb:-116px; --header-top:0px; --avatar-top:0px; --avatar-image-transform:translate3d(0rem, 0, 0) scale(1); --avatar-border-transform:translate3d(-0.222222rem, 0, 0) scale(1.77778); --avatar-border-opacity:0;"
+    data-color-mode="auto" data-light-theme="light" data-dark-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -52,7 +53,7 @@
                         <div class="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-1">
                             <div class="flex flex-col gap-8">
                                 {{range .Nodes}}
-                                <article class="group relative flex flex-col items-start rounded-xl p-5 bg-white">
+                                <article class="group relative flex flex-col items-start rounded-xl p-5 bg-white dark:bg-slate-800">
                                     <div class="flex w-full items-center justify-between pb-3">
                                         <div class="flex items-center space-x-3">
                                             <div class="text-xs text-neutral-500">
@@ -61,7 +62,7 @@
                                         <div class="flex items-center space-x-8">
                                             {{range .Lables.Nodes}}
                                             <span
-                                                class="ml-4 text-xs inline-flex items-center leading-sm uppercase px-3 py-1 bg-green-200 text-teal-500 rounded-full">
+                                                class="ml-4 text-xs inline-flex items-center leading-sm uppercase px-3 py-1 bg-green-200 text-teal-500 rounded-full dark:bg-slate-800 dark:text-white">
                                                 #{{.Name}}
                                             </span>
 
