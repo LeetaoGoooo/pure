@@ -23,5 +23,4 @@ go build main.go
 
 # Screens
 
-<image src="./screens/homepage.png" width="200"/>
-<image src="./screens/postpage.png" width="200"/>
+<image src="./screens/homepage.png" width="200"/><image src="./screens/postpage.png" width="200"/>
