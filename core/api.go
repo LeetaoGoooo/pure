@@ -2,14 +2,14 @@ package core
 
 import (
 	"context"
+	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/shurcooL/githubv4"
 	"golang.org/x/oauth2"
 )
 
-type api struct {
+type BlogApi struct {
 	client *githubv4.Client
 	owner  string
 	repo   string
@@ -23,9 +23,9 @@ func oauth2Client(accessToken string) *http.Client {
 	return oauth2.NewClient(ctx, ts)
 }
 
-func NewApi(username string, repo string, accessToken string) api {
+func NewApi(username string, repo string, accessToken string) BlogApi {
 
-	return api{
+	return BlogApi{
 		client: githubv4.NewClient(oauth2Client(accessToken)),
 		owner:  username,
 		repo:   repo,
@@ -33,7 +33,7 @@ func NewApi(username string, repo string, accessToken string) api {
 }
 
 // FetchPosts 获取 post 列表
-func (api *api) FetchPosts(before string, after string) (posts Discussions, err error) {
+func (api *BlogApi) FetchPosts(before, after, categoryId string) (posts Discussions, err error) {
 
 	var q struct {
 		Resposity struct {
@@ -47,9 +47,11 @@ func (api *api) FetchPosts(before string, after string) (posts Discussions, err 
 		"repo":             githubv4.String(api.repo),
 		"after":            (*githubv4.String)(nil),
 		"before":           (*githubv4.String)(nil),
-		"categoryId":       os.Getenv("CATEGORY_ID"),
+		"categoryId":       categoryId,
 		"label_first":      githubv4.Int(LABEL_MAX_COUNT),
 	}
+
+	fmt.Printf("%v\n", binds)
 
 	if len(after) > 0 {
 		binds["after"] = (githubv4.String)(after)
@@ -68,7 +70,7 @@ func (api *api) FetchPosts(before string, after string) (posts Discussions, err 
 }
 
 // FetchPostComments 根据 id 获取 posts 的所有评论
-func (api *api) FetchPost(number int) (discussion Node, err error) {
+func (api *BlogApi) FetchPost(number uint64) (discussion Node, err error) {
 	var q struct {
 		Reposity struct {
 			Discussion Node `graphql:"discussion(number:$number)"`
@@ -92,7 +94,7 @@ func (api *api) FetchPost(number int) (discussion Node, err error) {
 }
 
 // FetchCategories 获取所有的 Category
-func (api *api) FetchCategories(before string, after string) (Categories, error) {
+func (api *BlogApi) FetchCategories(before string, after string) (Categories, error) {
 	var q struct {
 		Reposity struct {
 			DiscussionCategories Categories `graphql:"discussionCategories(first:$category_first, after:$after, before:$before)"`

@@ -6,12 +6,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/js/tailwindcss.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
     <div class="inset-0 flex justify-center sm:px-8">
-            {{template "navbar.html"}}
+            {{template "navbar.html" .}}
     </div>
 
 
@@ -52,7 +52,7 @@
                     <div class="mx-auto max-w-2xl lg:max-w-5xl">
                         <div class="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-1">
                             <div class="flex flex-col gap-8">
-                                {{range .Nodes}}
+                                {{range .Posts.Nodes}}
                                 <article class="group relative flex flex-col items-start rounded-xl p-5 bg-white dark:bg-slate-800">
                                     <div class="flex w-full items-center justify-between pb-3">
                                         <div class="flex items-center space-x-3">
@@ -73,11 +73,9 @@
                                         <div
                                             class="absolute -inset-y-6 -inset-x-4 z-0 scale-95 bg-zinc-50 opacity-0 transition  dark:bg-zinc-800/50 sm:-inset-x-6 sm:rounded-2xl">
                                         </div><a
-                                            href="/article/{{.Number}}/{{.Title}}"><span
+                                            href="/post/{{.Number}}/{{.Title}}"><span
                                                 class="absolute -inset-y-6 -inset-x-4 z-20 sm:-inset-x-6 sm:rounded-2xl"></span><span
                                                 class="relative z-10">{{ .Title}}</span></a>
-
-
                                     </h2>
                                     <p class="relative z-10 mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                                         {{  .BodyText | previewContent}}
@@ -104,10 +102,10 @@
 
         <div class='flex items-center justify-center mt-10'>
             <div class="flex justify-center items-center space-x-4">
-                {{ if .PageInfo.HasPreviousPage }}
+                {{ if .Posts.PageInfo.HasPreviousPage }}
                 <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition cursor-pointer "  href="/?pre={{.PageInfo.StartCursor}}"> < </a>
                 {{ end }}
-                {{ if .PageInfo.HasNextPage}}
+                {{ if .Posts.PageInfo.HasNextPage}}
                 <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition  cursor-pointer"  href="/?next={{.PageInfo.EndCursor}}"> > </a>
                 {{ end }}    
             </div>

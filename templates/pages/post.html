@@ -4,12 +4,14 @@
 <head>
     <meta charSet="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>{{ .Title }}</title>
-    <meta name="description" content="{{  .BodyText | previewContent}}" />
-    <script src="/js/tailwindcss.js"></script>
+    <title>{{ .Post.Title }}</title>
+    <meta property="og:description" content="{{  .Post.BodyText | previewContent}}" />
+    <meta property="og:title" content="{{  .Post.Title }}" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
+<body class="flex flex-col bg-zinc-50 dark:bg-black">
     <div id="__next">
         <div class="fixed inset-0 flex justify-center sm:px-8">
             <div class="flex w-full max-w-7xl lg:px-8">
@@ -17,9 +19,9 @@
             </div>
         </div>
         <div class="relative">
-            <div class="fixed inset-0 flex justify-center sm:px-8">
+            <div class="flex justify-center sm:px-8">
                 <div class="relative">
-                    {{template "navbar.html"}}
+                    {{template "navbar.html" .}}
                 </div>
             </div>
             <main>
@@ -31,16 +33,16 @@
                                     <div class="mx-auto max-w-2xl">
                                         <article class="dark:text-white">
                                             <header class="flex flex-col">
-                                                <h1
+                                                <h2
                                                     class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
-                                                    {{ .Title }}</h1>
+                                                    {{ .Post.Title }}</h1>
                                                 <div class="flex w-full items-center justify-between pb-3 mt-6">
                                                     <div class="flex items-center space-x-3">
                                                         <div class="text-xs text-neutral-500">
-                                                            {{ .CreatedAt | formatDate }}</div>
+                                                            {{ .Post.CreatedAt | formatDate }}</div>
                                                     </div>
                                                     <div class="flex items-center space-x-8">
-                                                        {{range .Lables.Nodes}}
+                                                        {{range .Post.Lables.Nodes}}
                                                         <span
                                                             class="ml-4 text-xs inline-flex items-center leading-sm uppercase px-3 py-1 bg-green-200 text-teal-500 rounded-full dark:bg-slate-800 dark:text-white">
                                                             #{{.Name}}
@@ -53,7 +55,7 @@
                                             <div class="mt-8">
                                                 <div
                                                     class="d-block color-fg-default comment-body markdown-body js-comment-body">
-                                                    {{ .BodyHTML }}
+                                                    {{ .Post.BodyHTML | unescapeHtml }}
                                                 </div>
                                             </div>
                                         </article>
@@ -63,6 +65,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="giscus mx-auto max-w-6xl lg:px-8 mt-10">
+                </div>
+                    <script src="https://giscus.app/client.js"
+                    data-repo="{{$.Repo}}"
+                    data-repo-id="{{$.RepoId}}"
+                    data-mapping="number"
+                    data-term="{{.Post.Number}}"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="preferred_color_scheme"
+                    data-lang="zh-CN"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
             </main>
             {{template "footer.html"}}
         </div>

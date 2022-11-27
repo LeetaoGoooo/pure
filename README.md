@@ -4,15 +4,18 @@
 
 # Deploy
 
-Before you do a deployment, you need to set a few system variables
+Before you do a deployment, you need to config your own `pure.yaml`
 
 ```shell
-export GITHUB_USER_NAME=your_github_username
-export GITHUB_REPO=your_repo_name
-export GITHUB_ACCESS_TOKEN=your_access_token
-export CATEGORY_ID=certain_category_id # optional
+cp pure.sample.yaml pure.yaml
 ```
 Get your own [GITHUB_ACCESS_TOKEN](https://github.com/settings/tokens) here
+
+## comments
+
+pure use [gitcus](https://github.com/giscus/giscus) as comment system, visit [gitcus-website](https://giscus.app/) to get your repo id ,which can be found in `data-repo-id`
+
+![gitcus-config](./screens/gitcus-config.png)
 
 Then just run the application
 
@@ -23,4 +26,4 @@ go build main.go
 
 # Screens
 
-<image src="./screens/homepage.png" width="200"/><image src="./screens/postpage.png" width="200"/>
+<image src="./screens/homepage.png" width="300"/><image src="./screens/postpage.png" width="300"/>
