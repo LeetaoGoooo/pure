@@ -2,6 +2,11 @@ username: your_github_user_name
 repo: repo_your_use_for_blog
 repoId: repoId_your_use_for_blog # get it from gitcus
 accessToken: accessToken
+website:
+  host: host # your hostname,for rss
+  name: Leetao's Blog
+  bio:  What I think,not only tech
+  email: leetao94cn@gmail.com 
 categories: # which category discussion you wann display
   - id: id #id
     name: name  #name

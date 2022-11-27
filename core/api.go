@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/shurcooL/githubv4"
@@ -50,8 +49,6 @@ func (api *BlogApi) FetchPosts(before, after, categoryId string) (posts Discussi
 		"categoryId":       categoryId,
 		"label_first":      githubv4.Int(LABEL_MAX_COUNT),
 	}
-
-	fmt.Printf("%v\n", binds)
 
 	if len(after) > 0 {
 		binds["after"] = (githubv4.String)(after)
