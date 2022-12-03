@@ -11,7 +11,7 @@
 
 <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
     <div class="inset-0 flex justify-center sm:px-8">
-            {{template "navbar.html" .}}
+        {{template "navbar.html" .}}
     </div>
 
 
@@ -40,6 +40,12 @@
                                             d="M12 2C6.475 2 2 6.588 2 12.253c0 4.537 2.862 8.369 6.838 9.727.5.09.687-.218.687-.487 0-.243-.013-1.05-.013-1.91C7 20.059 6.35 18.957 6.15 18.38c-.113-.295-.6-1.205-1.025-1.448-.35-.192-.85-.667-.013-.68.788-.012 1.35.744 1.538 1.051.9 1.551 2.338 1.116 2.912.846.088-.666.35-1.115.638-1.371-2.225-.256-4.55-1.14-4.55-5.062 0-1.115.387-2.038 1.025-2.756-.1-.256-.45-1.307.1-2.717 0 0 .837-.269 2.75 1.051.8-.23 1.65-.346 2.5-.346.85 0 1.7.115 2.5.346 1.912-1.333 2.75-1.05 2.75-1.05.55 1.409.2 2.46.1 2.716.637.718 1.025 1.628 1.025 2.756 0 3.934-2.337 4.806-4.562 5.062.362.32.675.936.675 1.897 0 1.371-.013 2.473-.013 2.82 0 .268.188.589.688.486a10.039 10.039 0 0 0 4.932-3.74A10.447 10.447 0 0 0 22 12.253C22 6.588 17.525 2 12 2Z">
                                         </path>
                                     </svg></a>
+                                <a class="group -m-1 p-1" aria-label="Follow on Atom" href="/atom">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
+                                    class="h-6 w-6 fill-zinc-500 transition group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300">
+                                        <path fill-rule="evenodd" d="M3.75 4.5a.75.75 0 01.75-.75h.75c8.284 0 15 6.716 15 15v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75v-.75C18 11.708 12.292 6 5.25 6H4.5a.75.75 0 01-.75-.75V4.5zm0 6.75a.75.75 0 01.75-.75h.75a8.25 8.25 0 018.25 8.25v.75a.75.75 0 01-.75.75H12a.75.75 0 01-.75-.75v-.75a6 6 0 00-6-6H4.5a.75.75 0 01-.75-.75v-.75zm0 7.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" clip-rule="evenodd" />
+                                      </svg>                                      
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -53,7 +59,8 @@
                         <div class="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-1">
                             <div class="flex flex-col gap-8">
                                 {{range .Posts.Nodes}}
-                                <article class="group relative flex flex-col items-start rounded-xl p-5 bg-white dark:bg-slate-800">
+                                <article
+                                    class="group relative flex flex-col items-start rounded-xl p-5 bg-white dark:bg-slate-800">
                                     <div class="flex w-full items-center justify-between pb-3">
                                         <div class="flex items-center space-x-3">
                                             <div class="text-xs text-neutral-500">
@@ -72,13 +79,12 @@
                                     <h2 class="text-base font-semibold tracking-tight text-zinc-800 dark:text-zinc-100">
                                         <div
                                             class="absolute -inset-y-6 -inset-x-4 z-0 scale-95 bg-zinc-50 opacity-0 transition  dark:bg-zinc-800/50 sm:-inset-x-6 sm:rounded-2xl">
-                                        </div><a
-                                            href="/post/{{.Number}}/{{.Title}}"><span
+                                        </div><a href="/post/{{.Number}}/{{.Title}}"><span
                                                 class="absolute -inset-y-6 -inset-x-4 z-20 sm:-inset-x-6 sm:rounded-2xl"></span><span
                                                 class="relative z-10">{{ .Title}}</span></a>
                                     </h2>
                                     <p class="relative z-10 mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                                        {{  .BodyText | previewContent}}
+                                        {{ .BodyText | previewContent}}
                                     </p>
                                     <div aria-hidden="true"
                                         class="relative z-10 mt-4 flex items-center text-sm font-medium text-teal-500">
@@ -103,11 +109,14 @@
         <div class='flex items-center justify-center mt-10'>
             <div class="flex justify-center items-center space-x-4">
                 {{ if .Posts.PageInfo.HasPreviousPage }}
-                <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition cursor-pointer "  href="/?pre={{.PageInfo.StartCursor}}"> < </a>
-                {{ end }}
-                {{ if .Posts.PageInfo.HasNextPage}}
-                <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition  cursor-pointer"  href="/?next={{.PageInfo.EndCursor}}"> > </a>
-                {{ end }}    
+                <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition cursor-pointer "
+                    href="/?pre={{.PageInfo.StartCursor}}">
+                    < </a>
+                        {{ end }}
+                        {{ if .Posts.PageInfo.HasNextPage}}
+                        <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition  cursor-pointer"
+                            href="/?next={{.PageInfo.EndCursor}}"> > </a>
+                        {{ end }}
             </div>
         </div>
     </main>

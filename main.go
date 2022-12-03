@@ -79,8 +79,8 @@ var funcMap = template.FuncMap{
 		return unformated.Time.Format("2006-01-02")
 	},
 	"previewContent": func(fullContent githubv4.String) string {
-		if len(fullContent) >= 100 {
-			return string(fullContent)[0:100]
+		if len([]rune(fullContent)) >= 100 {
+			return string([]rune(fullContent)[:100])
 		}
 		return string(fullContent)
 	},
