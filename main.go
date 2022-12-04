@@ -51,6 +51,7 @@ type PureConfig struct {
 	} `yaml:"website"`
 	AccessToken string     `yaml:"accessToken"`
 	Categories  []Category `yaml:"categories"`
+	About       uint64     `yaml:"about"`
 }
 
 var config PureConfig
@@ -124,6 +125,7 @@ func FetchPosts(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", map[string]any{
 		"Posts":   discussions,
 		"Navbars": config.Categories,
+		"About":   config.About,
 	})
 }
 
@@ -147,6 +149,25 @@ func FetchPost(c *gin.Context) {
 	c.HTML(http.StatusOK, "post.html", map[string]any{
 		"Post":    discussion,
 		"Navbars": config.Categories,
+		"About":   config.About,
+		"Repo":    fmt.Sprintf("%s/%s", config.UserName, config.Repo),
+		"RepoId":  config.RepoId,
+	})
+}
+
+func AboutPage(c *gin.Context) {
+	discussion, err := api.FetchPost(config.About)
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+			"Message": err.Error(),
+		})
+		return
+	}
+
+	c.HTML(http.StatusOK, "post.html", map[string]any{
+		"Post":    discussion,
+		"Navbars": config.Categories,
+		"About":   config.About,
 		"Repo":    fmt.Sprintf("%s/%s", config.UserName, config.Repo),
 		"RepoId":  config.RepoId,
 	})
@@ -193,5 +214,8 @@ func main() {
 	r.GET("/category/:category_id/:category_name", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/post/:id/:title", cache.CacheByRequestURI(memoryCache, 1*time.Hour), FetchPost)
 	r.GET("/atom", cache.CacheByRequestURI(memoryCache, 24*time.Hour), GenerateFeed)
+	if config.About > 0 {
+		r.GET("/about", cache.CacheByRequestURI(memoryCache, 1*time.Hour), AboutPage)
+	}
 	r.Run()
 }
