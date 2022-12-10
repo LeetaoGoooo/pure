@@ -194,14 +194,14 @@ func GenerateFeed(c *gin.Context) {
 	for _, disdiscussion := range discussions.Nodes {
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:       string(disdiscussion.Title),
-			Description: string(disdiscussion.BodyText[0:200]),
+			Description: string([]rune(disdiscussion.Body)[:200]),
 			Author:      &feeds.Author{Name: config.Website.Name, Email: config.Website.Email},
 			Created:     disdiscussion.CreatedAt.Time,
 			Link:        &feeds.Link{Href: fmt.Sprintf("%s/post/%d/%s", config.Website.Host, disdiscussion.Number, disdiscussion.Title)},
 		})
 	}
 
-	c.XML(http.StatusOK, feed)
+	feed.WriteAtom(c.Writer)
 }
 
 func main() {
@@ -213,7 +213,7 @@ func main() {
 	r.GET("/", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/category/:category_id/:category_name", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/post/:id/:title", cache.CacheByRequestURI(memoryCache, 1*time.Hour), FetchPost)
-	r.GET("/atom", cache.CacheByRequestURI(memoryCache, 24*time.Hour), GenerateFeed)
+	r.GET("/atom.xml", cache.CacheByRequestURI(memoryCache, 24*time.Hour), GenerateFeed)
 	if config.About > 0 {
 		r.GET("/about", cache.CacheByRequestURI(memoryCache, 1*time.Hour), AboutPage)
 	}
