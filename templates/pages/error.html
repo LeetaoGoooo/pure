@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/js/tailwindcss.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
@@ -14,14 +14,15 @@
     <div class="flex items-center justify-center min-h-screen bg-white py-48">
         <div class="flex flex-col">
             <!-- Error Container -->
+            {{ if .Message }}
             <div class="flex flex-col items-center">
                 <div class="font-bold text-3xl xl:text-7xl lg:text-6xl md:text-5xl mt-10">
                     {{ .Message }}
                 </div>
-
             </div>
+            {{ end }}
 
-            <div class="flex flex-col mt-48 justify-center">
+            <div class="flex flex-col mt-18 justify-center">
                 <div class="text-gray-400 font-bold uppercase">
                     Continue With
                 </div>
