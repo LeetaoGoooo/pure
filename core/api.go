@@ -46,7 +46,7 @@ func (api *BlogApi) FetchPosts(before, after, categoryId string) (posts Discussi
 		"repo":             githubv4.String(api.repo),
 		"after":            (*githubv4.String)(nil),
 		"before":           (*githubv4.String)(nil),
-		"categoryId":       categoryId,
+		"categoryId":       (*githubv4.String)(nil),
 		"label_first":      githubv4.Int(LABEL_MAX_COUNT),
 	}
 
@@ -56,6 +56,10 @@ func (api *BlogApi) FetchPosts(before, after, categoryId string) (posts Discussi
 
 	if len(before) > 0 {
 		binds["before"] = (githubv4.String)(before)
+	}
+
+	if len(categoryId) > 0 {
+		binds["categoryId"] = (githubv4.String)(categoryId)
 	}
 
 	err = api.client.Query(context.Background(), &q, binds)

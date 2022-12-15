@@ -7,11 +7,8 @@
                <li><a class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400 item-menu"
                      href="/">Home</a></li>
                {{ range $index, $Navbar := .Navbars }}
-               <!-- 过滤掉默认 category -->
-               {{ if $index}}
                <li><a class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400 item-menu"
                      href="/category/{{.Id}}/{{.Name}}">{{.Name}}</a></li>
-               {{ end}}
                {{ end }}
 
                {{ if .About }}

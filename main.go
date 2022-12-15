@@ -106,14 +106,8 @@ func FetchPosts(c *gin.Context) {
 		return
 	}
 
-	categoryId := config.Categories[0].Id
-
-	if len(pageQuery.CategoryId) > 0 {
-
-		categoryId = pageQuery.CategoryId
-	}
-
-	discussions, err := api.FetchPosts(pageQuery.Pre, pageQuery.Next, categoryId)
+	// 获取所有文章
+	discussions, err := api.FetchPosts(pageQuery.Pre, pageQuery.Next, "")
 
 	if err != nil {
 		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
