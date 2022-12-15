@@ -88,6 +88,14 @@ var funcMap = template.FuncMap{
 	"unescapeHtml": func(bodyHtml githubv4.HTML) template.HTML {
 		return template.HTML(string(bodyHtml))
 	},
+	"isExisted": func(categoryId githubv4.String) bool {
+		for _, category := range config.Categories {
+			if category.Id == string(categoryId) {
+				return true
+			}
+		}
+		return false
+	},
 }
 
 func FetchPosts(c *gin.Context) {
@@ -106,8 +114,14 @@ func FetchPosts(c *gin.Context) {
 		return
 	}
 
+	categoryId := ""
+
+	if len(pageQuery.CategoryId) > 0 {
+		categoryId = pageQuery.CategoryId
+	}
+
 	// 获取所有文章
-	discussions, err := api.FetchPosts(pageQuery.Pre, pageQuery.Next, "")
+	discussions, err := api.FetchPosts(pageQuery.Pre, pageQuery.Next, categoryId)
 
 	if err != nil {
 		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
