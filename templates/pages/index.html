@@ -111,13 +111,13 @@
             <div class="flex justify-center items-center space-x-4">
                 {{ if .Posts.PageInfo.HasPreviousPage }}
                 <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition cursor-pointer "
-                    href="/?pre={{.PageInfo.StartCursor}}">
+                    href="/?pre={{.Posts.PageInfo.StartCursor}}">
                     < </a>
-                        {{ end }}
-                        {{ if .Posts.PageInfo.HasNextPage}}
-                        <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition  cursor-pointer"
-                            href="/?next={{.PageInfo.EndCursor}}"> > </a>
-                        {{ end }}
+                {{ end }}
+                {{ if .Posts.PageInfo.HasNextPage}}
+                <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition  cursor-pointer"
+                    href="/?next={{.Posts.PageInfo.EndCursor}}"> > </a>
+                {{ end }}  
             </div>
         </div>
     </main>
