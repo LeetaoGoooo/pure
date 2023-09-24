@@ -1,79 +1,21 @@
-package main
+package handler
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"net/http"
-	"os"
+	"pure/constants"
 	"pure/core"
+	"pure/enties"
 	"time"
 
-	cache "github.com/chenyahui/gin-cache"
-	"github.com/chenyahui/gin-cache/persist"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/feeds"
 	"github.com/shurcooL/githubv4"
-	"gopkg.in/yaml.v2"
 )
 
-type Response[T any] struct {
-	Code    int    `json:"code,omitempty"`
-	Data    *T     `json:"data,omitempty"`
-	Message string `json:"message,omitempty"`
-}
-
-type Category struct {
-	Id   string `yaml:"id"`
-	Name string `yaml:"name"`
-}
-
-type PageQuery struct {
-	Next         string `form:"next,omitempty"`
-	Pre          string `form:"pre,omitempty"`
-	CategoryId   string `uri:"category_id"`
-	CategoryName string `uri:"category_name"`
-}
-
-type PostQuery struct {
-	Id    uint64 `uri:"id" binding:"required"`
-	Title string `uri:"title" binding:"required"`
-}
-
-type PureConfig struct {
-	UserName string `yaml:"username"`
-	Repo     string `yaml:"repo"`
-	RepoId   string `yaml:"repoId"`
-	Website  struct {
-		Host  string `yaml:"host"`
-		Bio   string `yaml:"bio"`
-		Name  string `yaml:"name"`
-		Email string `yaml:"email"`
-	} `yaml:"website"`
-	AccessToken string     `yaml:"accessToken"`
-	Categories  []Category `yaml:"categories"`
-	About       uint64     `yaml:"about"`
-}
-
-var config PureConfig
-var api core.BlogApi
-var memoryCache persist.CacheStore
-
-func init() {
-	configFile, err := os.ReadFile("pure.yaml")
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = yaml.Unmarshal(configFile, &config)
-
-	if err != nil {
-		panic(err)
-	}
-
-	api = core.NewApi(config.UserName, config.Repo, config.AccessToken)
-	memoryCache = persist.NewMemoryStore(1 * time.Minute)
-}
+var config enties.PureConfig = constants.BlogConfig
 
 var funcMap = template.FuncMap{
 	"formatDate": func(unformated githubv4.DateTime) string {
@@ -98,17 +40,23 @@ var funcMap = template.FuncMap{
 	},
 }
 
+var api core.BlogApi
+
+func init() {
+	api = core.NewApi(config.UserName, config.Repo, config.AccessToken)
+}
+
 func FetchPosts(c *gin.Context) {
-	var pageQuery PageQuery
+	var pageQuery enties.PageQuery
 	if err := c.ShouldBind(&pageQuery); err != nil {
-		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+		c.HTML(http.StatusBadRequest, constants.ErrorPage, map[string]any{
 			"Message": err.Error(),
 		})
 		return
 	}
 
 	if err := c.ShouldBindUri(&pageQuery); err != nil {
-		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+		c.HTML(http.StatusBadRequest, constants.ErrorPage, map[string]any{
 			"Message": err.Error(),
 		})
 		return
@@ -124,23 +72,32 @@ func FetchPosts(c *gin.Context) {
 	discussions, err := api.FetchPosts(pageQuery.Pre, pageQuery.Next, categoryId)
 
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+		c.HTML(http.StatusBadRequest, constants.ErrorPage, map[string]any{
 			"Message": err.Error(),
 		})
 		return
 	}
 
-	c.HTML(http.StatusOK, "index.html", map[string]any{
+	tmpl, _ := template.New("posts").Funcs(funcMap).Parse(constants.IndexPage)
+
+	var tpl bytes.Buffer
+	if err := tmpl.Execute(&tpl, map[string]any{
 		"Posts":   discussions,
 		"Navbars": config.Categories,
 		"About":   config.About,
-	})
+	}); err != nil {
+		panic(err)
+	}
+
+	c.Writer.WriteHeader(http.StatusOK)
+	c.Writer.Write(tpl.Bytes())
 }
 
 func FetchPost(c *gin.Context) {
-	var postQuery PostQuery
+
+	var postQuery enties.PostQuery
 	if err := c.ShouldBindUri(&postQuery); err != nil {
-		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+		c.HTML(http.StatusBadRequest, constants.ErrorPage, map[string]any{
 			"Message": err.Error(),
 		})
 		return
@@ -148,37 +105,51 @@ func FetchPost(c *gin.Context) {
 
 	discussion, err := api.FetchPost(postQuery.Id)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+		c.HTML(http.StatusBadRequest, constants.ErrorPage, map[string]any{
 			"Message": err.Error(),
 		})
 		return
 	}
 
-	c.HTML(http.StatusOK, "post.html", map[string]any{
+	tmpl, _ := template.New("post").Funcs(funcMap).Parse(constants.PostPage)
+	var tpl bytes.Buffer
+	if err := tmpl.Execute(&tpl, map[string]any{
 		"Post":    discussion,
 		"Navbars": config.Categories,
 		"About":   config.About,
 		"Repo":    fmt.Sprintf("%s/%s", config.UserName, config.Repo),
 		"RepoId":  config.RepoId,
-	})
+	}); err != nil {
+		panic(err)
+	}
+	c.Writer.WriteHeader(http.StatusOK)
+	c.Writer.Write(tpl.Bytes())
 }
 
 func AboutPage(c *gin.Context) {
+
 	discussion, err := api.FetchPost(config.About)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+		c.HTML(http.StatusBadRequest, constants.ErrorPage, map[string]any{
 			"Message": err.Error(),
 		})
 		return
 	}
 
-	c.HTML(http.StatusOK, "post.html", map[string]any{
+	tmpl, _ := template.New("post").Funcs(funcMap).Parse(constants.PostPage)
+	var tpl bytes.Buffer
+
+	if err := tmpl.Execute(&tpl, map[string]any{
 		"Post":    discussion,
 		"Navbars": config.Categories,
 		"About":   config.About,
 		"Repo":    fmt.Sprintf("%s/%s", config.UserName, config.Repo),
 		"RepoId":  config.RepoId,
-	})
+	}); err != nil {
+		panic(err)
+	}
+	c.Writer.WriteHeader(http.StatusOK)
+	c.Writer.Write(tpl.Bytes())
 }
 
 func GenerateFeed(c *gin.Context) {
@@ -210,23 +181,4 @@ func GenerateFeed(c *gin.Context) {
 	}
 
 	feed.WriteAtom(c.Writer)
-}
-
-func main() {
-
-	r := gin.Default()
-	r.SetFuncMap(funcMap)
-	r.LoadHTMLGlob("templates/**/*")
-	r.Static("/css", "templates/css")
-	r.GET("/", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
-	r.GET("/category/:category_id/:category_name", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
-	r.GET("/post/:id/:title", cache.CacheByRequestURI(memoryCache, 1*time.Hour), FetchPost)
-	r.GET("/atom.xml", cache.CacheByRequestURI(memoryCache, 24*time.Hour), GenerateFeed)
-	r.GET("/404", func(ctx *gin.Context) {
-		ctx.HTML(http.StatusOK, "error.html", nil)
-	})
-	if config.About > 0 {
-		r.GET("/about", cache.CacheByRequestURI(memoryCache, 1*time.Hour), AboutPage)
-	}
-	r.Run()
 }

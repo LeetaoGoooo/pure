@@ -1,0 +1,49 @@
+{
+    "github": {
+      "silent": true
+    },
+    "build": {
+        "env": {
+          "GO_BUILD_FLAGS": "-ldflags '-s -w'"
+        }
+      },
+      	
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/posts",
+      "permanent": true
+    }
+  ],
+      "rewrites": [
+        {
+          "source": "/posts",
+          "destination": "/api/posts"
+        },
+        {
+          "source": "/post/(.*)",
+          "destination": "/api/post/(.*)"
+        },
+        {
+          "source": "/about",
+          "destination": "/api/about"
+        },
+        {
+          "source": "/atom.xml",
+          "destination": "/api/atom.xml"
+        },
+        {
+          "source":"/category/(.*)",
+          "destination": "/api/category/(.*)"
+        },
+        {
+          "source":"/404",
+          "destination": "/api/404"
+        },
+        {
+          "source": "/api/(.*)",
+          "destination": "/api/index.go"
+        }
+      ]
+
+}
