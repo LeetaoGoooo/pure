@@ -11,6 +11,15 @@ cp pure.sample.yaml pure.yaml
 ```
 Get your own [GITHUB_ACCESS_TOKEN](https://github.com/settings/tokens) here
 
+# Deploy To Vercel
+
+Before you do a deployment, you need to config `BlogConfig` in `constants.go` 
+
+Get your own [GITHUB_ACCESS_TOKEN](https://github.com/settings/tokens) here
+
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLeetaoGoooo%2Fpure%2Ftree%2Fvercel&env=ACCESS_TOKEN,USER_NAME,REPO,REPO_ID,WEB_HOST,WEB_NAME,WEB_BIO,WEB_EMAIL,CATEGORY_ID,CATEGORY_NAME)
+
 ## comments
 
 pure use [gitcus](https://github.com/giscus/giscus) as comment system, visit [gitcus-website](https://giscus.app/) to get your repo id ,which can be found in `data-repo-id`
