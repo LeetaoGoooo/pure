@@ -2,6 +2,8 @@
 
 > It's a blog based on github discussion that lets you focus on your creativity. All you need to do is open your browser, log in to github and start your creative journey, no more worry about file, sync deployment and image uploads. What's more  you can migrate your blog in the way you like!
 
+Notes: **For standard deployment, please refer to the [master](https://github.com/LeetaoGoooo/pure/tree/master) branch**
+
 # Deploy To Vercel
 
 Before you do a deployment, you need to config `BlogConfig` in `constants.go` 
@@ -17,12 +19,6 @@ pure use [gitcus](https://github.com/giscus/giscus) as comment system, visit [gi
 
 ![gitcus-config](./screens/gitcus-config.png)
 
-Then just run the application
-
-```shell
-go build main.go
-./main
-```
 
 # Screens
 
