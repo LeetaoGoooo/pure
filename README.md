@@ -11,7 +11,7 @@ cp pure.sample.yaml pure.yaml
 ```
 Get your own [GITHUB_ACCESS_TOKEN](https://github.com/settings/tokens) here
 
-# Deploy To Vercel
+# [Deploy To Vercel](https://github.com/LeetaoGoooo/pure/tree/vercel)
 
 Before you do a deployment, you need to config `BlogConfig` in `constants.go` 
 
