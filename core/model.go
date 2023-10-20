@@ -20,7 +20,7 @@ type Category struct {
 
 type Categories struct {
 	PageInfo PageInfo
-	Nodes    []Categories
+	Nodes    []Category
 }
 
 type Node struct {
