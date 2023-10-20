@@ -20,8 +20,6 @@ go test -run TestApi -v
 
 It'll list all your categories, then you can config your `pure.yaml`
 
-# Deploy To Vercel
-
 # [Deploy To Vercel](https://github.com/LeetaoGoooo/pure/tree/vercel)
 
 Before you do a deployment, you need to config `BlogConfig` in `constants.go` 
