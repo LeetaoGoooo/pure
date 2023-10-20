@@ -11,6 +11,15 @@ cp pure.sample.yaml pure.yaml
 ```
 Get your own [GITHUB_ACCESS_TOKEN](https://github.com/settings/tokens) here
 
+## Category
+
+```bash
+cd core
+go test -run TestApi -v
+```
+
+It'll list all your categories, then you can config your `pure.yaml`
+
 # Deploy To Vercel
 
 Before you do a deployment, you need to config `BlogConfig` in `constants.go` 
