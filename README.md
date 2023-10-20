@@ -22,6 +22,8 @@ It'll list all your categories, then you can config your `pure.yaml`
 
 # Deploy To Vercel
 
+# [Deploy To Vercel](https://github.com/LeetaoGoooo/pure/tree/vercel)
+
 Before you do a deployment, you need to config `BlogConfig` in `constants.go` 
 
 Get your own [GITHUB_ACCESS_TOKEN](https://github.com/settings/tokens) here
