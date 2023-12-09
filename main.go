@@ -218,6 +218,7 @@ func main() {
 	r.SetFuncMap(funcMap)
 	r.LoadHTMLGlob("templates/**/*")
 	r.Static("/css", "templates/css")
+	r.StaticFile("/favicon.ico", "templates/favicon.ico")
 	r.GET("/", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/category/:category_id/:category_name", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/post/:id/:title", cache.CacheByRequestURI(memoryCache, 1*time.Hour), FetchPost)
