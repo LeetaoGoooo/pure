@@ -3,7 +3,7 @@ package core
 import "testing"
 
 func TestApi(t *testing.T) {
-	api := NewApi("username", "repor", "token")
+	api := NewApi("username", "repo", "token")
 	t.Run("TestApiCategories", func(t *testing.T) {
 		categories, err := api.FetchCategories("", "")
 		if err != nil {
