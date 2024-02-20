@@ -5,10 +5,19 @@
     <meta charSet="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{{ .Post.Title }}</title>
-    <meta property="og:description" content="{{  .Post.BodyText | previewContent}}" />
-    <meta property="og:title" content="{{  .Post.Title }}" />
+    <meta property="description" content="{{  .Post.BodyText | previewContent}}" />
+    <meta property="title" content="{{  .Post.Title }}" />
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer base {
+            ul {
+                list-style: disc;
+                margin: 0;
+                padding: 0;
+              }
+        }
+    </style>
 </head>
 
 <body class="flex flex-col bg-zinc-50 dark:bg-black">
@@ -25,7 +34,7 @@
                 </div>
             </div>
             <main>
-                <div class="sm:px-8 mt-16 lg:mt-32">
+                <div class="sm:px-8">
                     <div class="mx-auto max-w-7xl lg:px-8">
                         <div class="relative px-4 sm:px-8 lg:px-12">
                             <div class="mx-auto max-w-2xl lg:max-w-5xl">
@@ -33,7 +42,7 @@
                                     <div class="mx-auto max-w-2xl">
                                         <article class="dark:text-white">
                                             <header class="flex flex-col">
-                                                <h2
+                                                <h1
                                                     class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
                                                     {{ .Post.Title }}</h1>
                                                 <div class="flex w-full items-center justify-between pb-3 mt-6">

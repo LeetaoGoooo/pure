@@ -80,7 +80,7 @@
                                     <h2 class="text-base font-semibold tracking-tight text-zinc-800 dark:text-zinc-100">
                                         <div
                                             class="absolute -inset-y-6 -inset-x-4 z-0 scale-95 bg-zinc-50 opacity-0 transition  dark:bg-zinc-800/50 sm:-inset-x-6 sm:rounded-2xl">
-                                        </div><a href="/post/{{.Number}}/{{.Title}}"><span
+                                        </div><a href="/post/{{.Number}}/{{.Title | slug }}"><span
                                                 class="absolute -inset-y-6 -inset-x-4 z-20 sm:-inset-x-6 sm:rounded-2xl"></span><span
                                                 class="relative z-10">{{ .Title}}</span></a>
                                     </h2>
@@ -112,7 +112,7 @@
                 {{ if .Posts.PageInfo.HasPreviousPage }}
                 <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition cursor-pointer "
                     href="/?pre={{.Posts.PageInfo.StartCursor}}">
-                    < </a>
+                    </a>
                 {{ end }}
                 {{ if .Posts.PageInfo.HasNextPage}}
                 <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition  cursor-pointer"

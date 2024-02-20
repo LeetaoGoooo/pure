@@ -12,6 +12,7 @@ import (
 	"github.com/chenyahui/gin-cache/persist"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/feeds"
+	"github.com/gosimple/slug"
 	"github.com/shurcooL/githubv4"
 	"gopkg.in/yaml.v2"
 )
@@ -95,6 +96,9 @@ var funcMap = template.FuncMap{
 			}
 		}
 		return false
+	},
+	"slug": func(title githubv4.String) string {
+		return slug.Make(string(title))
 	},
 }
 
@@ -199,13 +203,13 @@ func GenerateFeed(c *gin.Context) {
 		return
 	}
 
-	for _, disdiscussion := range discussions.Nodes {
+	for _, discussion := range discussions.Nodes {
 		feed.Items = append(feed.Items, &feeds.Item{
-			Title:       string(disdiscussion.Title),
-			Description: string([]rune(disdiscussion.Body)[:200]),
+			Title:       string(discussion.Title),
+			Description: string([]rune(discussion.Body)[:200]),
 			Author:      &feeds.Author{Name: config.Website.Name, Email: config.Website.Email},
-			Created:     disdiscussion.CreatedAt.Time,
-			Link:        &feeds.Link{Href: fmt.Sprintf("%s/post/%d/%s", config.Website.Host, disdiscussion.Number, disdiscussion.Title)},
+			Created:     discussion.CreatedAt.Time,
+			Link:        &feeds.Link{Href: fmt.Sprintf("%s/post/%d/%s", config.Website.Host, discussion.Number, discussion.Title)},
 		})
 	}
 
@@ -218,6 +222,7 @@ func main() {
 	r.SetFuncMap(funcMap)
 	r.LoadHTMLGlob("templates/**/*")
 	r.Static("/css", "templates/css")
+	r.StaticFile("/favicon.ico", "templates/favicon.ico")
 	r.GET("/", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/category/:category_id/:category_name", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/post/:id/:title", cache.CacheByRequestURI(memoryCache, 1*time.Hour), FetchPost)
