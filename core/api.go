@@ -155,7 +155,7 @@ func (api *BlogApi) QueryPosts(keyword *string, label *string, categories *[]str
 	}
 
 	binds := map[string]interface{}{
-		"first":       githubv4.Int(CATEGORY_MAX_COUNT),
+		"first":       githubv4.Int(PER_PAGE_POST_COUNT),
 		"query":       githubv4.String(query),
 		"type":        githubv4.SearchTypeDiscussion,
 		"label_first": githubv4.Int(LABEL_MAX_COUNT),
@@ -170,4 +170,34 @@ func (api *BlogApi) QueryPosts(keyword *string, label *string, categories *[]str
 		posts = append(posts, node.Node)
 	}
 	return posts, nil
+}
+
+// fetch all labels from discussion 获取所有的 labels
+func (api *BlogApi) FetchAllLabels() ([]Label, error) {
+	var q struct {
+		Reposity struct {
+			Labels struct {
+				Edges []struct {
+					Node Label
+				}
+			} `graphql:"labels(first: $first)"`
+		} `graphql:"repository(owner: $owner, name: $repo)"`
+	}
+
+	binds := map[string]interface{}{
+		"first": githubv4.Int(MAX_LABELS_COUNT),
+		"owner": githubv4.String(api.owner),
+		"repo":  githubv4.String(api.repo),
+	}
+
+	err := api.client.Query(context.Background(), &q, binds)
+	if err != nil {
+		return []Label{}, err
+	}
+
+	var labels []Label
+	for _, node := range q.Reposity.Labels.Edges {
+		labels = append(labels, node.Node)
+	}
+	return labels, nil
 }

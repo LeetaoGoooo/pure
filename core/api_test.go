@@ -1,11 +1,12 @@
 package core
 
 import (
+	"os"
 	"testing"
 )
 
 func TestApi(t *testing.T) {
-	api := NewApi("username", "repo", "token")
+	api := NewApi(os.Getenv("PURE_USER_NAME"), os.Getenv("PURE_REPO"), os.Getenv("PURE_TOKEN"))
 	t.Run("TestApiCategories", func(t *testing.T) {
 		categories, err := api.FetchCategories("", "")
 		if err != nil {
@@ -37,5 +38,16 @@ func TestApi(t *testing.T) {
 				t.Errorf("QueryPosts failed, %v the number of results are supposed to be %d, but got %d\n", queryTestCase, queryTestCase.resultCount, len(posts))
 			}
 		}
+	})
+
+	t.Run("TestApiLabels", func(t *testing.T) {
+		labels, err := api.FetchAllLabels()
+		if err != nil {
+			t.Errorf("FetchCategories error: %v", err)
+		}
+		if len(labels) == 0 {
+			t.Errorf("FetchCategories the number of labels is zero!")
+		}
+		t.Logf("labels: %v", labels)
 	})
 }
