@@ -135,6 +135,7 @@ func FetchPosts(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "index.html", map[string]any{
+		"Title":   pageQuery.CategoryName,
 		"Posts":   discussions,
 		"Navbars": config.Categories,
 		"About":   config.About,
@@ -164,6 +165,21 @@ func FetchPost(c *gin.Context) {
 		"About":   config.About,
 		"Repo":    fmt.Sprintf("%s/%s", config.UserName, config.Repo),
 		"RepoId":  config.RepoId,
+	})
+}
+
+func TagPage(c *gin.Context) {
+	labels, err := api.FetchAllLabels()
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+			"Message": err.Error(),
+		})
+		return
+	}
+	c.HTML(http.StatusOK, "tags.html", map[string]any{
+		"Labels":  labels,
+		"Navbars": config.Categories,
+		"About":   config.About,
 	})
 }
 
@@ -226,6 +242,7 @@ func main() {
 	r.GET("/", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/category/:category_id/:category_name", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/post/:id/:title", cache.CacheByRequestURI(memoryCache, 1*time.Hour), FetchPost)
+	r.GET("/tags", cache.CacheByRequestURI(memoryCache, 24*time.Hour), TagPage)
 	r.GET("/atom.xml", cache.CacheByRequestURI(memoryCache, 24*time.Hour), GenerateFeed)
 	r.GET("/404", func(ctx *gin.Context) {
 		ctx.HTML(http.StatusOK, "error.html", nil)
