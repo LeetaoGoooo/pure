@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/shurcooL/githubv4"
@@ -125,4 +126,48 @@ func (api *BlogApi) FetchCategories(before string, after string) (Categories, er
 	categories := q.Reposity.DiscussionCategories
 
 	return categories, err
+}
+
+// FetchPostsByLabel 根据 label 和 category 获取对应的 posts
+func (api *BlogApi) QueryPosts(keyword *string, label *string, categories *[]string) ([]Node, error) {
+	var q struct {
+		Search struct {
+			Nodes []struct {
+				Node `graphql:"... on Discussion"`
+			}
+		} `graphql:"search(query: $query first: $first, type: $type)"`
+	}
+
+	var query = fmt.Sprintf("repo:%s ", api.repo)
+
+	if keyword != nil {
+		query = fmt.Sprintf("%s %s ", query, *keyword)
+	}
+
+	if label != nil {
+		query = fmt.Sprintf("%s label:\"%s\" ", query, *label)
+	}
+
+	if categories != nil {
+		for _, category := range *categories {
+			query = fmt.Sprintf("%s category:\"%s\" ", query, category)
+		}
+	}
+
+	binds := map[string]interface{}{
+		"first":       githubv4.Int(CATEGORY_MAX_COUNT),
+		"query":       githubv4.String(query),
+		"type":        githubv4.SearchTypeDiscussion,
+		"label_first": githubv4.Int(LABEL_MAX_COUNT),
+	}
+
+	err := api.client.Query(context.Background(), &q, binds)
+	if err != nil {
+		return []Node{}, err
+	}
+	var posts []Node
+	for _, node := range q.Search.Nodes {
+		posts = append(posts, node.Node)
+	}
+	return posts, nil
 }
