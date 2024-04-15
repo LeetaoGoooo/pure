@@ -8,3 +8,6 @@ const PER_PAGE_POST_COUNT = 10
 
 // 最大的 category 数量
 const CATEGORY_MAX_COUNT = 10
+
+// 最大的 labels 数量
+const MAX_LABELS_COUNT = 100

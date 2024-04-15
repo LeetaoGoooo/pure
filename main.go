@@ -35,6 +35,12 @@ type PageQuery struct {
 	CategoryName string `uri:"category_name"`
 }
 
+type SearchQuery struct {
+	Keyword    string   `form:"keyword,omitempty"`
+	Label      string   `form:"label,omitempty"`
+	Categories []string `form:"categories,omitempty"`
+}
+
 type PostQuery struct {
 	Id    uint64 `uri:"id" binding:"required"`
 	Title string `uri:"title" binding:"required"`
@@ -135,9 +141,46 @@ func FetchPosts(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "index.html", map[string]any{
-		"Posts":   discussions,
-		"Navbars": config.Categories,
-		"About":   config.About,
+		"Title":    pageQuery.CategoryName,
+		"Nodes":    discussions.Nodes,
+		"PageInfo": discussions.PageInfo,
+		"Navbars":  config.Categories,
+		"About":    config.About,
+	})
+}
+
+func SearchPosts(c *gin.Context) {
+	var searchQuery SearchQuery
+
+	if err := c.ShouldBind(&searchQuery); err != nil {
+		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+			"Message": err.Error(),
+		})
+		return
+	}
+
+	if searchQuery.Label == "" && len(searchQuery.Categories) == 0 && searchQuery.Keyword == "" {
+		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+			"Message": "Invalid Params",
+		})
+		return
+	}
+
+	result, err := api.QueryPosts(searchQuery.Keyword, searchQuery.Label, searchQuery.Categories)
+
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+			"Message": err.Error(),
+		})
+		return
+	}
+
+	c.HTML(http.StatusOK, "index.html", map[string]any{
+		"Title":    "Search Result",
+		"Nodes":    result.Nodes,
+		"PageInfo": result.PageInfo,
+		"Navbars":  config.Categories,
+		"About":    config.About,
 	})
 }
 
@@ -164,6 +207,21 @@ func FetchPost(c *gin.Context) {
 		"About":   config.About,
 		"Repo":    fmt.Sprintf("%s/%s", config.UserName, config.Repo),
 		"RepoId":  config.RepoId,
+	})
+}
+
+func TagPage(c *gin.Context) {
+	labels, err := api.FetchAllLabels()
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "error.html", map[string]any{
+			"Message": err.Error(),
+		})
+		return
+	}
+	c.HTML(http.StatusOK, "tags.html", map[string]any{
+		"Labels":  labels,
+		"Navbars": config.Categories,
+		"About":   config.About,
 	})
 }
 
@@ -226,6 +284,8 @@ func main() {
 	r.GET("/", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/category/:category_id/:category_name", cache.CacheByRequestURI(memoryCache, 30*time.Second), FetchPosts)
 	r.GET("/post/:id/:title", cache.CacheByRequestURI(memoryCache, 1*time.Hour), FetchPost)
+	r.GET("/tags", cache.CacheByRequestURI(memoryCache, 24*time.Hour), TagPage)
+	r.GET("/search", cache.CacheByRequestURI(memoryCache, 24*time.Hour), SearchPosts)
 	r.GET("/atom.xml", cache.CacheByRequestURI(memoryCache, 24*time.Hour), GenerateFeed)
 	r.GET("/404", func(ctx *gin.Context) {
 		ctx.HTML(http.StatusOK, "error.html", nil)

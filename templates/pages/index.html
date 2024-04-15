@@ -7,6 +7,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <title>{{  .Title }}</title>
+    <meta property="description" content="{{  .Title }}" />
+    <meta property="title" content="{{  .Title }}" />
 </head>
 
 <body class="flex h-full flex-col bg-zinc-50 dark:bg-black">
@@ -58,7 +61,7 @@
                     <div class="mx-auto max-w-2xl lg:max-w-5xl">
                         <div class="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-1">
                             <div class="flex flex-col gap-8">
-                                {{range .Posts.Nodes}}
+                                {{range .Nodes}}
                                     {{ if .Category.Id | isExisted }}
                                 <article
                                     class="group relative flex flex-col items-start rounded-xl p-5 bg-white dark:bg-slate-800">
@@ -109,14 +112,14 @@
 
         <div class='flex items-center justify-center mt-10'>
             <div class="flex justify-center items-center space-x-4">
-                {{ if .Posts.PageInfo.HasPreviousPage }}
+                {{ if .PageInfo.HasPreviousPage }}
                 <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition cursor-pointer "
-                    href="/?pre={{.Posts.PageInfo.StartCursor}}">
+                    href="/?pre={{.PageInfo.StartCursor}}">
                     </a>
                 {{ end }}
-                {{ if .Posts.PageInfo.HasNextPage}}
+                {{ if .PageInfo.HasNextPage}}
                 <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition  cursor-pointer"
-                    href="/?next={{.Posts.PageInfo.EndCursor}}"> > </a>
+                    href="/?next={{.PageInfo.EndCursor}}"> > </a>
                 {{ end }}  
             </div>
         </div>

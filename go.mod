@@ -36,7 +36,7 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/gorilla/feeds v1.1.1
 	github.com/gosimple/slug v1.13.1
-	github.com/shurcooL/githubv4 v0.0.0-20220922232305-70b4d362a8cb
+	github.com/shurcooL/githubv4 v0.0.0-20240120211514-18a1ae0e79dc
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783
 	gopkg.in/yaml.v2 v2.4.0
 )
