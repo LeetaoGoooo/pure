@@ -19,18 +19,19 @@ func TestApi(t *testing.T) {
 		var label = "python"
 		var keyword = "django"
 		queryTestCases := []struct {
-			keyword     *string
-			label       *string
-			categories  *[]string
+			keyword     string
+			label       string
+			categories  []string
 			resultCount int
 		}{
-			{&keyword, nil, &[]string{"随笔"}, 3},
-			{nil, &label, &[]string{"随笔", "历史存档"}, 10},
-			{&keyword, &label, &[]string{"随笔", "历史存档"}, 4},
+			{keyword, "", []string{"随笔"}, 3},
+			{"", label, []string{"随笔", "历史存档"}, 10},
+			{keyword, label, []string{"随笔", "历史存档"}, 4},
 		}
 
 		for _, queryTestCase := range queryTestCases {
-			posts, err := api.QueryPosts(queryTestCase.keyword, queryTestCase.label, queryTestCase.categories)
+			result, err := api.QueryPosts(queryTestCase.keyword, queryTestCase.label, queryTestCase.categories)
+			posts := result.Nodes
 			if err != nil {
 				t.Errorf("QueryPosts error: %v", err)
 			}

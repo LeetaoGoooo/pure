@@ -71,3 +71,8 @@ type Repies struct {
 	PageInfo PageInfo  `json:"page_info,omitempty"`
 	Nodes    []Comment `json:"nodes,omitempty"`
 }
+
+type SearchResults struct {
+	PageInfo PageInfo `json:"page_info,omitempty"`
+	Nodes    []Node   `json:"nodes,omitempty"`
+}

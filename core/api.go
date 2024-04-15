@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/shurcooL/githubv4"
 	"golang.org/x/oauth2"
@@ -129,27 +130,28 @@ func (api *BlogApi) FetchCategories(before string, after string) (Categories, er
 }
 
 // FetchPostsByLabel 根据 label 和 category 获取对应的 posts
-func (api *BlogApi) QueryPosts(keyword *string, label *string, categories *[]string) ([]Node, error) {
+func (api *BlogApi) QueryPosts(keyword string, label string, categories []string) (SearchResults, error) {
 	var q struct {
 		Search struct {
-			Nodes []struct {
+			PageInfo PageInfo
+			Nodes    []struct {
 				Node `graphql:"... on Discussion"`
 			}
 		} `graphql:"search(query: $query first: $first, type: $type)"`
 	}
 
-	var query = fmt.Sprintf("repo:%s ", api.repo)
+	var query = fmt.Sprintf("repo:%s/%s ", api.owner, api.repo)
 
-	if keyword != nil {
-		query = fmt.Sprintf("%s %s ", query, *keyword)
+	if len(strings.Trim(keyword, "")) != 0 {
+		query = fmt.Sprintf("%s %s ", query, keyword)
 	}
 
-	if label != nil {
-		query = fmt.Sprintf("%s label:\"%s\" ", query, *label)
+	if len(strings.Trim(label, "")) != 0 {
+		query = fmt.Sprintf("%s label:\"%s\" ", query, label)
 	}
 
-	if categories != nil {
-		for _, category := range *categories {
+	if len(categories) != 0 {
+		for _, category := range categories {
 			query = fmt.Sprintf("%s category:\"%s\" ", query, category)
 		}
 	}
@@ -163,13 +165,16 @@ func (api *BlogApi) QueryPosts(keyword *string, label *string, categories *[]str
 
 	err := api.client.Query(context.Background(), &q, binds)
 	if err != nil {
-		return []Node{}, err
+		return SearchResults{}, err
 	}
 	var posts []Node
 	for _, node := range q.Search.Nodes {
 		posts = append(posts, node.Node)
 	}
-	return posts, nil
+	return SearchResults{
+		PageInfo: q.Search.PageInfo,
+		Nodes:    posts,
+	}, nil
 }
 
 // fetch all labels from discussion 获取所有的 labels
