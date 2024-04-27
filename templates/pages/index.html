@@ -113,14 +113,19 @@
         <div class='flex items-center justify-center mt-10'>
             <div class="flex justify-center items-center space-x-4">
                 {{ if .PageInfo.HasPreviousPage }}
-                <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition cursor-pointer "
-                    href="/?pre={{.PageInfo.StartCursor}}">
-                    </a>
+                <a class="px-8 py-1 bg-green-200 rounded-full dark:bg-slate-800 dark:text-white"
+                   href="/?pre={{.PageInfo.EndCursor}}&next={.PageInfo.StartCursor}">
+                    < </a>
+                {{ end }}
+                {{ if and (eq false .PageInfo.HasPreviousPage) (eq false .PageInfo.HasNextPage) }}
+                <a class="px-8 py-1 bg-green-200 rounded-full dark:bg-slate-800 dark:text-white"
+                   href="/?next={{.PageInfo.StartCursor}}">
+                    < </a>
                 {{ end }}
                 {{ if .PageInfo.HasNextPage}}
-                <a class="px-2 py-1 text-3xl leading-6 text-slate-400 transition  cursor-pointer"
-                    href="/?next={{.PageInfo.EndCursor}}"> > </a>
-                {{ end }}  
+                <a class="px-8 py-1 bg-green-200 rounded-full dark:bg-slate-800 dark:text-white"
+                   href="/?next={{.PageInfo.EndCursor}}"> > </a>
+                {{ end }}
             </div>
         </div>
     </main>
