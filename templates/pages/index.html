@@ -114,7 +114,7 @@
             <div class="flex justify-center items-center space-x-4">
                 {{ if .PageInfo.HasPreviousPage }}
                 <a class="px-8 py-1 bg-green-200 rounded-full dark:bg-slate-800 dark:text-white"
-                   href="/?pre={{.PageInfo.EndCursor}}&next={.PageInfo.StartCursor}">
+                   href="/?pre={{.PageInfo.EndCursor}}&next={{.PageInfo.StartCursor}">
                     < </a>
                 {{ end }}
                 {{ if and (eq false .PageInfo.HasPreviousPage) (eq false .PageInfo.HasNextPage) }}
