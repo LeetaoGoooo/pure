@@ -31,8 +31,6 @@ type Category struct {
 type PageQuery struct {
 	Next         string `form:"next,omitempty"`
 	Pre          string `form:"pre,omitempty"`
-	LastNext     string `form:"last_next,omitempty"`
-	LastPre      string `form:"last_pre,omitempty"`
 	CategoryId   string `uri:"category_id"`
 	CategoryName string `uri:"category_name"`
 }

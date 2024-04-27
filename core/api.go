@@ -38,12 +38,13 @@ func (api *BlogApi) FetchPosts(before, after, categoryId string) (posts Discussi
 
 	var q struct {
 		Resposity struct {
-			Discussion Discussions `graphql:"discussions(first:$discussion_first, orderBy:{field:CREATED_AT,direction:DESC}, after:$after, before:$before, categoryId:$categoryId)"`
+			Discussion Discussions `graphql:"discussions(first:$discussion_first,last: $discussion_last, orderBy:{field:CREATED_AT,direction:DESC}, after:$after, before:$before, categoryId:$categoryId)"`
 		} `graphql:"repository(owner: $owner, name: $repo)"`
 	}
 
 	binds := map[string]interface{}{
 		"discussion_first": githubv4.Int(PER_PAGE_POST_COUNT),
+		"discussion_last":  (*githubv4.Int)(nil),
 		"owner":            githubv4.String(api.owner),
 		"repo":             githubv4.String(api.repo),
 		"after":            (*githubv4.String)(nil),
@@ -58,6 +59,8 @@ func (api *BlogApi) FetchPosts(before, after, categoryId string) (posts Discussi
 
 	if len(before) > 0 {
 		binds["before"] = (githubv4.String)(before)
+		binds["discussion_last"] = githubv4.Int(PER_PAGE_POST_COUNT)
+		binds["discussion_first"] = (*githubv4.Int)(nil)
 	}
 
 	if len(categoryId) > 0 {
