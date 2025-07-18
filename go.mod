@@ -1,6 +1,6 @@
 module pure
 
-go 1.19
+go 1.23.0
 
 require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
@@ -11,7 +11,6 @@ require (
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/jellydator/ttlcache/v2 v2.11.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -27,7 +26,6 @@ require (
 	golang.org/x/sync v0.12.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 )
 
@@ -37,6 +35,6 @@ require (
 	github.com/gorilla/feeds v1.1.1
 	github.com/gosimple/slug v1.13.1
 	github.com/shurcooL/githubv4 v0.0.0-20240120211514-18a1ae0e79dc
-	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783
+	golang.org/x/oauth2 v0.27.0
 	gopkg.in/yaml.v2 v2.4.0
 )
